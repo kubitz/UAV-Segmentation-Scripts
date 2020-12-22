@@ -10,7 +10,7 @@ Those scripts were used to prepare and unify multiple datasets used to train a s
 | --------------- | ---------------- | ----------------- | --------------------------------------------------------------- | -------------------- |
 | [Cityscape](https://www.cityscapes-dataset.com/)| 5000 (50 seq)    | 30 | High-quality autonomous driving segmentation (not UAV)  | Ground Level         |
 | [Aerospace](https://cutt.ly/phMhtsN)       | 3269  | 11  | images captured from commercial drone (5 to 50 meters altitude) | Mixed (forward/down) |
-| [TU-GRAZ landing](https://cutt.ly/GhMhawL) | 592 | 20   | Segmentation for Urban environment or safe landing              | down                 |
+| [TU-GRAZ landing](https://cutt.ly/GhMhawL) | 592 | 20   | Segmentation for Urban environment for safe landing              | down                 |
 | [UAVid](https://uavid.nl/)| 420 (42 seq)     | 8                 | Segmentation for Urban environment                              | forward              |
 
 
