@@ -16,10 +16,10 @@ Those scripts were used to prepare and unify multiple datasets used to train a s
 
 ## Common Labels across datasets
 
-| Dataset \ Labels    | road         | person | vehicle              | building | vegetation          | background |
-|---------------------|--------------|--------|----------------------|----------|---------------------|------------|
-| Cityscape (not UAV) | [x]          | [x]    | [x] (bus/truck/car)   | [x]      | - [x]                 | [x]        |
-| Aerospace           | [x]          | [x]    | [x]                  | [x]      | [x]                 | [x]        |
-| TU-GRAZ landing     | [x] (gravel) | [x]    | [x]                  | [x]      | [x] (tree/gras)     | [x]        |
-| UAVid               | [x]          | [x]    | [x] (static/dynamic) | [x]      | [x] (tree/low veg.) | [x]        |
+| Dataset \ Labels    | road                        | person             | vehicle                             | building           | vegetation                         | background         |
+|---------------------|-----------------------------|--------------------|-------------------------------------|--------------------|------------------------------------|--------------------|
+| Cityscape (not UAV) | :heavy_check_mark:          | :heavy_check_mark: | :heavy_check_mark: (bus/truck/car)  | :heavy_check_mark: |  :heavy_check_mark:               | :heavy_check_mark: |
+| Aerospace           | :heavy_check_mark:          | :heavy_check_mark: | :heavy_check_mark:                  | :heavy_check_mark: | :heavy_check_mark:                 | :heavy_check_mark: |
+| TU-GRAZ landing     | :heavy_check_mark: (gravel) | :heavy_check_mark: | :heavy_check_mark:                  | :heavy_check_mark: | :heavy_check_mark: (tree/gras)     | :heavy_check_mark: |
+| UAVid               | :heavy_check_mark:          | :heavy_check_mark: | :heavy_check_mark: (static/dynamic) | :heavy_check_mark: | :heavy_check_mark: (tree/low veg.) | :heavy_check_mark: |
 
