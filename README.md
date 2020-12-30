@@ -6,7 +6,7 @@ Those scripts were used to prepare and unify multiple datasets used to train a s
 
 ## Datasets Overview
 
-| Dataset         | Number of images | Number of classes | Description                                                     | Perspective          |
+| Dataset       | Number of images | Number of classes | Description                                                     | Perspective          |
 | --------------- | ---------------- | ----------------- | --------------------------------------------------------------- | -------------------- |
 | [Cityscape (2D fine)](https://www.cityscapes-dataset.com/)| 5000 (50 seq)    | 30 | High-quality autonomous driving segmentation (not UAV)  | Ground Level         |
 | [Aerospace](https://cutt.ly/phMhtsN)       | 3269  | 11  | images captured from commercial drone (5 to 50 meters altitude) | Mixed (forward/down) |
@@ -16,9 +16,10 @@ Those scripts were used to prepare and unify multiple datasets used to train a s
 
 ## Common Labels across datasets
 
-| Dataset             |               |        |                      |          |                            |            |
-| ------------------- | ------------- | ------ | -------------------- | -------- | -------------------------- | ---------- |
-| Cityscape (not UAV) | road          | person | car(bus/truck/car)   | building | vegetation                 | background |
-| Aerospace           | road          | person | car                  | building | vegetation                 | background |
-| TU-GRAZ landing     | road (gravel) | person | car                  | building | vegetation (tree/gras)     | background |
-| UAVid               | road          | person | car (static/dynamic) | buidling | vegetation (tree/low veg.) | background |
+| Dataset \ Labels    | road         | person | vehicle              | building | vegetation          | background |
+|---------------------|--------------|--------|----------------------|----------|---------------------|------------|
+| Cityscape (not UAV) | [x]          | [x]    | [x] (bus/truck/car)   | [x]      | - [x]                 | [x]        |
+| Aerospace           | [x]          | [x]    | [x]                  | [x]      | [x]                 | [x]        |
+| TU-GRAZ landing     | [x] (gravel) | [x]    | [x]                  | [x]      | [x] (tree/gras)     | [x]        |
+| UAVid               | [x]          | [x]    | [x] (static/dynamic) | [x]      | [x] (tree/low veg.) | [x]        |
+
