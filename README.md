@@ -18,8 +18,8 @@ Those scripts were used to prepare and unify multiple datasets used to train a s
 
 | Dataset \ Labels    | road                        | person             | vehicle                             | building           | vegetation                         | background         |
 |---------------------|-----------------------------|--------------------|-------------------------------------|--------------------|------------------------------------|--------------------|
-| Cityscape (not UAV) | :heavy_check_mark:          | :heavy_check_mark: | :heavy_check_mark: (bus/truck/car)  | :heavy_check_mark: |  :heavy_check_mark:               | :heavy_check_mark: |
+| Cityscape (not UAV) | :heavy_check_mark:          | :heavy_check_mark: (person/rider)| :heavy_check_mark: (bus/truck/car)  | :heavy_check_mark: |  :heavy_check_mark:               | :heavy_check_mark: |
 | Aerospace           | :heavy_check_mark:          | :heavy_check_mark: | :heavy_check_mark:                  | :heavy_check_mark: | :heavy_check_mark:                 | :heavy_check_mark: |
-| TU-GRAZ landing     | :heavy_check_mark: (gravel) | :heavy_check_mark: | :heavy_check_mark:                  | :heavy_check_mark: | :heavy_check_mark: (tree/gras)     | :heavy_check_mark: |
+| TU-GRAZ landing     | :heavy_check_mark: (gravel) | :heavy_check_mark: | :heavy_check_mark:                  | :heavy_check_mark: (door/window/roof/wall)| :heavy_check_mark:(tree/gras)     | :heavy_check_mark: |
 | UAVid               | :heavy_check_mark:          | :heavy_check_mark: | :heavy_check_mark: (static/dynamic) | :heavy_check_mark: | :heavy_check_mark: (tree/low veg.) | :heavy_check_mark: |
 
