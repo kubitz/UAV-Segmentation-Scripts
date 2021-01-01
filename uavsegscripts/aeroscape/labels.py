@@ -52,46 +52,46 @@ Label = namedtuple( 'Label' , [
 aeroscapes = [
     #       name                     id    trainId   category            catId                    hasInstances      ignoreInEval   color
     Label(  'background'            ,  0 ,      255 , 'void'            , Category.void.value       , False        , True         , (  0,  0,  0) ),
-    Label(  'person'                ,  1 ,      255 , 'human'           , Category.human.value      , False        , True         , (  1,  1,  1) ),
+    Label(  'person'                ,  1 ,        1, 'human'           , Category.human.value      , False        , True         , (  1,  1,  1) ),
     Label(  'bike'                  ,  2 ,      255 , 'human'           , Category.human.value      , False        , True         , (  2,  2,  2) ),
-    Label(  'car'                   ,  3 ,      255 , 'vehicle'         , Category.vehicle.value    , False        , True         , (  3,  3,  3) ),
+    Label(  'car'                   ,  3 ,        2 , 'vehicle'         , Category.vehicle.value    , False        , True         , (  3,  3,  3) ),
     Label(  'drone'                 ,  4 ,      255 , 'obstacle'        , Category.obstacle.value   , False        , True         , (  4,  4,  4) ),
     Label(  'boat'                  ,  5 ,      255 , 'vehicle'         , Category.obstacle.value   , False        , True         , (  5,  5,  5) ),
     Label(  'animal'                ,  6 ,      255 , 'object'          , Category.obstacle.value   , False        , True         , (  6,  6,  6) ),
-    Label(  'obstacle'              ,  7 ,        0 , 'obstacle'        , Category.obstacle.value   , False        , False        , (  7,  7,  7) ),
-    Label(  'construction'          ,  8 ,        1 , 'construction'    , Category.void.value       , False        , False        , (  8,  8,  8) ),
-    Label(  'vegetation'            ,  9 ,      255 , 'vegetation'      , Category.vegetation.value , False        , True         , (  9,  9,  9) ),
-    Label(  'road'                  , 10 ,      255 , 'flat'            , Category.flat.value       , False        , True         , ( 10, 10, 10) ),
-    Label(  'sky'                   , 11 ,        2 , 'void'            , Category.void.value       , False        , False        , ( 11, 11, 11) ),
+    Label(  'obstacle'              ,  7 ,      255 , 'obstacle'        , Category.obstacle.value   , False        , False        , (  7,  7,  7) ),
+    Label(  'construction'          ,  8 ,        3 , 'construction'    , Category.void.value       , False        , False        , (  8,  8,  8) ),
+    Label(  'vegetation'            ,  9 ,        4 , 'vegetation'      , Category.vegetation.value , False        , True         , (  9,  9,  9) ),
+    Label(  'road'                  , 10 ,        5 , 'flat'            , Category.flat.value       , False        , True         , ( 10, 10, 10) ),
+    Label(  'sky'                   , 11 ,      255 , 'void'            , Category.void.value       , False        , False        , ( 11, 11, 11) ),
 ]
 
 # TU Graz
 graz = [
     # name (as shown in dataset)      id    trainId   category            catId                         hasInstances   ignoreInEval       color
     Label(  'unlabeled'             ,  0 ,      255 , 'void'            , Category.void.value           , False        , True         , (  0,  0,  0) ),
-    Label(  'person'                ,  1 ,      255 , 'human'           , Category.human.value          , False        , True         , (255, 22, 96) ),
+    Label(  'person'                ,  1 ,        1 , 'human'           , Category.human.value          , False        , True         , (255, 22, 96) ),
     Label(  'bicycle'               ,  2 ,      255 , 'human'           , Category.human.value          , False        , True         , (119, 11, 32) ),
-    Label(  'car'                   ,  3 ,      255 , 'vehicle'         , Category.vehicle.value        , False        , True         , (  9,143,150) ),
+    Label(  'car'                   ,  3 ,        2 , 'vehicle'         , Category.vehicle.value        , False        , True         , (  9,143,150) ),
     Label(  'water'                 ,  4 ,      255 , 'water'           , Category.water.value          , False        , True         , ( 28, 42,168) ),
     Label(  'pool'                  ,  5 ,      255 , 'water'           , Category.water.value          , False        , True         , (254,148, 12) ),
-    Label(  'wall'                  ,  6 ,      255 , 'construction'    , Category.construction.value   , False        , True         , (102,102,156) ),
-    Label(  'window'                ,  7 ,        0 , 'construction'    , Category.construction.value   , False        , False        , (254,228, 12) ),
-    Label(  'roof'                  ,  8 ,        1 , 'construction'    , Category.construction.value   , False        , False        , ( 70, 70, 70) ),
-    Label(  'vegetation'            ,  9 ,      255 , 'vegetation'      , Category.vegetation.value     , False        , True         , (107,142, 35) ),
-    Label(  'paved-area'            , 10 ,      255 , 'flat'            , Category.flat.value           , False        , True         , (128, 64,128) ),
-    Label(  'grass'                 , 11 ,        2 , 'flat'            , Category.flat.value           , False        , False        , (  0,102,  0) ),
-    Label(  'gravel'                , 12 ,        2 , 'flat'            , Category.flat.value           , False        , False        , (112,103, 87) ),
-    Label(  'dirt'                  , 13 ,        2 , 'flat'            , Category.flat.value           , False        , False        , (130, 76,  0) ),
-    Label(  'rocks'                 , 14 ,        2 , 'obstacle'        , Category.obstacle.value       , False        , False        , ( 48, 41, 30) ),
-    Label(  'obstacle'              , 15 ,        2 , 'obstacle'        , Category.obstacle.value       , False        , False        , (  2,135,115) ),
-    Label(  'dog'                   , 16 ,        2 , 'obstacle'        , Category.obstacle.value       , False        , False        , (102, 51,  0) ),
-    Label(  'fence'                 , 17 ,        2 , 'obstacle'        , Category.obstacle.value       , False        , False        , (190,153,153) ),
-    Label(  'fence-pole'            , 18 ,        2 , 'obstacle'        , Category.obstacle.value       , False        , False        , (153,153,153) ),
-    Label(  'conflicting'           , 19 ,        2 , 'void'            , Category.void.value           , False        , False        , (255,  0,  0) ),
-    Label(  'ar-marker'             , 20 ,        2 , 'void'            , Category.void.value           , False        , False        , (112,150,146) ),
-    Label(  'bald-tree'             , 21 ,        2 , 'vegetation'      , Category.vegetation.value     , False        , False        , (190,250,190) ),
-    Label(  'tree'                  , 22 ,        2 , 'vegetation'      , Category.vegetation.value     , False        , False        , ( 51, 51,  0) ),
-    Label(  'door'                  , 23 ,        0 , 'construction'    , Category.construction.value   , False        , False        , (254,148, 12) )
+    Label(  'wall'                  ,  6 ,        3 , 'construction'    , Category.construction.value   , False        , True         , (102,102,156) ),
+    Label(  'window'                ,  7 ,        3 , 'construction'    , Category.construction.value   , False        , False        , (254,228, 12) ),
+    Label(  'roof'                  ,  8 ,        3 , 'construction'    , Category.construction.value   , False        , False        , ( 70, 70, 70) ),
+    Label(  'vegetation'            ,  9 ,        4 , 'vegetation'      , Category.vegetation.value     , False        , True         , (107,142, 35) ),
+    Label(  'paved-area'            , 10 ,        5 , 'flat'            , Category.flat.value           , False        , True         , (128, 64,128) ),
+    Label(  'grass'                 , 11 ,        4 , 'flat'            , Category.flat.value           , False        , False        , (  0,102,  0) ),
+    Label(  'gravel'                , 12 ,        5 , 'flat'            , Category.flat.value           , False        , False        , (112,103, 87) ),
+    Label(  'dirt'                  , 13 ,        255 , 'flat'            , Category.flat.value           , False        , False        , (130, 76,  0) ),
+    Label(  'rocks'                 , 14 ,        255 , 'obstacle'        , Category.obstacle.value       , False        , False        , ( 48, 41, 30) ),
+    Label(  'obstacle'              , 15 ,        255 , 'obstacle'        , Category.obstacle.value       , False        , False        , (  2,135,115) ),
+    Label(  'dog'                   , 16 ,        255 , 'obstacle'        , Category.obstacle.value       , False        , False        , (102, 51,  0) ),
+    Label(  'fence'                 , 17 ,        255 , 'obstacle'        , Category.obstacle.value       , False        , False        , (190,153,153) ),
+    Label(  'fence-pole'            , 18 ,        255 , 'obstacle'        , Category.obstacle.value       , False        , False        , (153,153,153) ),
+    Label(  'conflicting'           , 19 ,        255 , 'void'            , Category.void.value           , False        , False        , (255,  0,  0) ),
+    Label(  'ar-marker'             , 20 ,        255 , 'void'            , Category.void.value           , False        , False        , (112,150,146) ),
+    Label(  'bald-tree'             , 21 ,          4 , 'vegetation'      , Category.vegetation.value     , False        , False        , (190,250,190) ),
+    Label(  'tree'                  , 22 ,          4 , 'vegetation'      , Category.vegetation.value     , False        , False        , ( 51, 51,  0) ),
+    Label(  'door'                  , 23 ,          3 , 'construction'    , Category.construction.value   , False        , False        , (254,148, 12) )
     
     ]
 
@@ -99,14 +99,13 @@ graz = [
 uavid = [
     #       name                     id    trainId   category            catId                          hasInstances      ignoreInEval   color
     Label(  'background-clutter'    ,  0 ,      255 , 'void'            , Category.void.value           , False        , True         , (  0,  0,  0) ),
-    Label(  'human'                 ,  1 ,      255 , 'human'           , Category.human.value          , False        , True         , ( 64, 64,  1) ),
-    Label(  'moving-car'            ,  3 ,      255 , 'vehicle'         , Category.vehicle.value        , False        , True         , ( 64,  0,128) ),
-    Label(  'static-car'            ,  4 ,      255 , 'vehicle'         , Category.vehicle.value        ,  False       , True         , (192,  0,192) ),
-    Label(  'building'              ,  5 ,      255 , 'construction'    , Category.construction.value   , False        , True         , (128,  0,  0) ),
-    Label(  'road'                  ,  6 ,      255 , 'flat'            , Category.flat.value           , False        , True         , (128, 64,128) ),
-    Label(  'tree'                  ,  7 ,        0 , 'vegetation'      , Category.vegetation.value     , False        , False        , (  0,128,  0) ),
-    Label(  'low-vegetation'        ,  8 ,        1 , 'flat'            , Category.flat.value           , False        , False        , (128,128,  0) )
-
+    Label(  'human'                 ,  1 ,        1 , 'human'           , Category.human.value          , False        , True         , ( 64, 64,  1) ),
+    Label(  'moving-car'            ,  3 ,        2 , 'vehicle'         , Category.vehicle.value        , False        , True         , ( 64,  0,128) ),
+    Label(  'static-car'            ,  4 ,        2 , 'vehicle'         , Category.vehicle.value        , False        , True         , (192,  0,192) ),
+    Label(  'building'              ,  5 ,        3 , 'construction'    , Category.construction.value   , False        , True         , (128,  0,  0) ),
+    Label(  'road'                  ,  6 ,        5 , 'flat'            , Category.flat.value           , False        , True         , (128, 64,128) ),
+    Label(  'tree'                  ,  7 ,        4 , 'vegetation'      , Category.vegetation.value     , False        , False        , (  0,128,  0) ),
+    Label(  'low-vegetation'        ,  8 ,        4 , 'flat'            , Category.flat.value           , False        , False        , (128,128,  0) )
 ]
 
 # Cityscape
