@@ -3,43 +3,42 @@ import numpy as np
 from PIL import Image
 import os
 import glob
-from labels import graz
+from labels import datasets
 from pathlib import Path
 from tqdm import tqdm
 import random
 
-
-def get_palette(dataset):
+def get_palette(dataset_name):
     """Takes a dataset label format. Returns a palette based on the color specified
 
     Args:
-        dataset (label): label for dataset. See labels.py for more details
-
+        dataset_name
     Returns:
         list of ints: palette
     """
     palette=[]
-    for label in dataset:
+    labels_dataset=datasets[dataset_name].labels
+    for label in labels_dataset:
         palette.extend(label.color)
     # Zero-pad the palette to 256 RGB colours, i.e. 768 values and apply to image    
     palette += (768-len(palette))*[255]    
     return palette
 
-def get_id_palette(dataset, mode='label_id'):
+def get_id_palette(dataset_name, mode='label_id'):
     """Takes a datset label format. Returns a palette based on the label_id/trainId specified
 
     Args:
-        dataset (label): label for dataset. See labels.py for more details
-
+        dataset name
     Returns:
         list of ints: palette
     """
     palette=[]
+    labels_dataset=datasets[dataset_name].labels
     if mode=='label_id':
-        for label in dataset:
+        for label in labels_dataset:
             palette.extend((label.id,label.id,label.id))
     elif mode=='train_id':
-         for label in dataset:
+         for label in labels_dataset:
             palette.extend((label.trainId,label.trainId,label.trainId))       
     else:
         raise ValueError('Invalid Mode')
@@ -65,20 +64,20 @@ def remap_img_colors(img,inPalette,outPalette):
     img_out.putpalette(outPalette)
     return img_out
 
-def rgb_labels2cityscape(img,dataset, mode='label_id'):
+def rgb_labels2cityscape(img,dataset_name, mode='label_id'):
     """Converts an image labelled by colors to an image labelled by either label id or train ids (like the cityscape dataset)
 
     Args:
         img (pillow RGB img): input image labelled by colors
-        dataset (list of named tuples): labels for dataset. See labels.py for details. 
+        dataset_name: see labels.py
         mode (str, optional): Specifies if the output image will be labelled based on the label ids or trainIds.
         Defaults to 'label_id'.
 
     Returns:
         pillow image: re-labelled image
     """
-    inPalette=get_palette(dataset)
-    outPalette=get_id_palette(dataset, mode=mode)
+    inPalette=get_palette(dataset_name)
+    outPalette=get_id_palette(dataset_name, mode=mode)
     img=remap_img_colors(img,inPalette,outPalette)
     return img
 
@@ -102,28 +101,22 @@ def quantize2given_palette(im, palette):
     return im.convert("RGB").quantize(palette=p)
 
 
-def id2trainid(img, dataset):
+def id2trainid(img, dataset_name):
     """Converts image ground-truth labelled with ids to image ground truth labelled with trainIds
     
     Args:
         img (pillow img): input image labelled by label ids (rgb with three identical channels)
-        dataset (list of named tuples): labels for dataset. See labels.py for details. 
+        dataset_name: see labels.py
         mode (str, optional): Specifies if the output image will be labelled based on the label ids or trainIds.
         Defaults to 'label_id'.
 
     Returns:
         pillow image: re-labelled image    
     """
-    id_palette=get_id_palette(dataset,mode="label_id")
-    trainId_palette=get_id_palette(dataset,mode="train_id")
+    id_palette=get_id_palette(dataset_name,mode="label_id")
+    trainId_palette=get_id_palette(dataset_name,mode="train_id")
     img=remap_img_colors(img,id_palette,trainId_palette)
     return img
-
-def load_trainId(dataset):
-    """Loads train Id config file and update trainIds for dataset accordingly
-       See /config for config file examples
-    """
-    pass
 
 
 def getDirectory(fileName):
@@ -143,16 +136,6 @@ def ensurePath(path):
         return
     if not os.path.isdir(path):
         os.makedirs(path)
-
-path_dataset="/home/kubitz/Documents/fyp/dataset/graz_landing/semantic_drone_dataset"
-
-
-# Open input image and palettise to "inPalette" so each pixel is replaced by palette index
-# ... so all black pixels become 0, all red pixels become 1, all green pixels become 2...
-im = Image.open(r"/home/kubitz/Documents/fyp/UAV-Segmentation-Scripts/uavsegscripts/test.png") 
-r = rgb_labels2cityscape(im,graz,mode="label_id")
-r.save('/home/kubitz/Documents/fyp/UAV-Segmentation-Scripts/uavsegscripts/resultTrain.png')
-
 
 
 def create_default_file_struct(base_dir,dataset_name):
@@ -203,11 +186,6 @@ def get_label_img(base_dir_dataset,dataset_name):
         
         gt_dir=os.path.join(base_dir_dataset,"training_set","gt","semantic")
         img_dir=os.path.join(base_dir_dataset,"training_set","images")
-        gts=list_files_in_dir(gt_dir,ext=".png")
-        imgs=list_files_in_dir(img_dir,ext=".jpg")
-        if len(gts)!=len(imgs):
-            raise ValueError("Missing gt/img data")
-        return imgs,gts
     
     elif dataset_name=="aeroscapes":
     # AEROSCAPE DATASET DEFAULT FILE STRUCTURE
@@ -217,7 +195,8 @@ def get_label_img(base_dir_dataset,dataset_name):
     # ├── JPEGImages
     # ├── SegmentationClass
     # └── Visualizations
-        pass
+        gt_dir=os.path.join(base_dir_dataset,"Visualizations")
+        img_dir=os.path.join(base_dir_dataset,'JPEGImages')
     
     elif dataset_name=="uavid":
     # UAVID DATASET DEFAULT FILE STRUCTURE
@@ -247,8 +226,11 @@ def get_label_img(base_dir_dataset,dataset_name):
         pass
     else:
         raise ValueError("invalid dataset name")
-
-    return False
+    gts=list_files_in_dir(gt_dir,ext=".png")
+    imgs=list_files_in_dir(img_dir,ext=".jpg")
+    if len(gts)!=len(imgs):
+        raise ValueError("Missing gt/img data")
+    return imgs,gts
 
 
 
@@ -290,10 +272,11 @@ def convert_gts2cityscapes(base_dir_dataset, dataset_name, lbl_split, mode="trai
             dataset_name+"_standardized",
             "gt",
             split_names[idx])
+        
         for file in tqdm(split,desc=split_names[idx]):
             im = Image.open(file)
             im=im.resize(size, Image.NEAREST)
-            im=rgb_labels2cityscape(im,graz,mode=mode)
+            im=rgb_labels2cityscape(im,dataset_name,mode=mode)
             im.save(os.path.join(split_dir,os.path.basename(file)))
 
 def is_split(list_files):
@@ -310,8 +293,8 @@ def prepare_dataset(base_dir_dataset,dataset_name,mode="train_id", size=(2048,10
     else:
         img_split=imgs
         lbl_split=lbs
-    #convert_gts2cityscapes(base_dir_dataset, dataset_name,lbl_split, mode, size)
-    #convert_imgs2cityscape(base_dir_dataset,dataset_name,img_split)
+    convert_gts2cityscapes(base_dir_dataset, dataset_name,lbl_split, mode, size)
+    convert_imgs2cityscape(base_dir_dataset,dataset_name,img_split)
     save_sets_to_txt(base_dir_dataset,dataset_name)
 
 
@@ -320,10 +303,6 @@ def list_files_in_dir(directory,ext=""):
     """recursively list all files in a directory with a particular exention
     e.g. directory= /home/user/datasets, ext=".jpeg"
     """
-    # files=[]
-    # for file in os.listdir(directory):
-    #     if file.endswith(ext):
-    #         files.append(os.path.join(directory, file))
     files = glob.glob(directory + '/**/*'+ext, recursive=True)
     return files
 
@@ -366,6 +345,16 @@ def save_sets_to_txt(base_dir_dataset, dataset_name):
             for img in path_all_files[idx]:
                 f.write("{}, {}\n".format(img[0],img[1]))
 
+
+
+path_dataset="/home/kubitz/Documents/fyp/dataset/graz_landing/semantic_drone_dataset"
+
+
+# Open input image and palettise to "inPalette" so each pixel is replaced by palette index
+# ... so all black pixels become 0, all red pixels become 1, all green pixels become 2...
+im = Image.open(r"/home/kubitz/Documents/fyp/UAV-Segmentation-Scripts/uavsegscripts/test.png") 
+r = rgb_labels2cityscape(im,'graz',mode="label_id")
+r.save('/home/kubitz/Documents/fyp/UAV-Segmentation-Scripts/uavsegscripts/resultTrain.png')
 
 
 
