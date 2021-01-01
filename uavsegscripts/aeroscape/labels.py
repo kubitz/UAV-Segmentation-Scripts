@@ -1,5 +1,6 @@
 from collections import namedtuple
 from enum import IntEnum
+from PIL.Image import TRANSPOSE
 
 class Category(IntEnum):
     void=0
@@ -11,6 +12,13 @@ class Category(IntEnum):
     vegetation=7
     water=8
 
+
+Dataset= namedtuple('Dataset',[
+    'name'  , # Name of dataset
+    'labels', # holds the label set (list of namedtuples),
+    'is_split' #
+]
+)
 
 Label = namedtuple( 'Label' , [
 
@@ -147,3 +155,10 @@ cityscape = [
     Label(  'bicycle'              , 33 ,       18 , 'vehicle'         , 7       , True         , False        , (119, 11, 32) ),
     Label(  'license plate'        , -1 ,       -1 , 'vehicle'         , 7       , False        , True         , (  0,  0,142) )
 ]
+
+datasets = {
+    "graz":Dataset('graz',graz,False),
+    "uavid":Dataset('uavid',uavid,True),
+    "aeroscapes":Dataset('aeroscapes',aeroscapes,True),
+    "cityscapes":Dataset('cityscapes',cityscape,True)
+}
