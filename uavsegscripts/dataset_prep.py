@@ -1,14 +1,12 @@
-from typing import Tuple
-from cv2 import data
 import numpy as np
 from PIL import Image
 import os
-import glob
-from labels import datasets
 from pathlib import Path
 from tqdm import tqdm
-import random
 from pathlib import Path
+import uavsegscripts.utils as utils
+from uavsegscripts.labels import datasets
+
 def get_palette(dataset_name):
     """Takes a dataset label format. Returns a palette based on the color specified
 
@@ -119,52 +117,11 @@ def id2trainid(img, dataset_name):
     img=remap_img_colors(img,id_palette,trainId_palette)
     return img
 
-
-def getDirectory(fileName):
-    """Returns the directory name for the given filename
-    e.g.
-    fileName = "/foo/bar/foobar.txt"
-    return value is "bar"
-    Not much error checking though
-    """
-    dirName = os.path.dirname(fileName)
-    return os.path.basename(dirName)
-
-
-def ensurePath(path):
-    """Make sure that the given path exists"""
-    if not path:
-        return
-    if not os.path.isdir(path):
-        os.makedirs(path)
-
-
-def create_default_file_struct(base_dir,dataset_name):
-# Create a default directory to store the new dataset format
-    # DEFAULT TARGET DATASET FORMAT
-    # └── dataset name
-    #     ├── gt
-    #     │   ├── test
-    #     │   ├── train
-    #     │   └── val
-    #     ├── images
-    #     │   ├── test
-    #     │   ├── train
-    #     │   └── val
-    #     └── image_sets
-    #         ├── test.txt
-    #         ├── trn.txt
-    #         └── val.txt
-    base_dir_dataset=os.path.join(base_dir,dataset_name+"_standardized")
-    for folder in ['gt','images']:
-        for subfolder in ['val','train','test']:
-            dir= os.path.join(base_dir_dataset,folder,subfolder)
-            Path(dir).mkdir(parents=True, exist_ok=True)
-    Path(os.path.join(base_dir_dataset,'image_sets')).mkdir(parents=True, exist_ok=True)
-
-
 def get_label_img(base_dir_dataset,dataset_name, use_default_split=True):
-
+    """ Returns directory to labels and gts for a given dataset. 
+        If the datasets are pre-split and use_default_split is True, the 
+        directories return are split in train/val/test sets. 
+    """
     if dataset_name=="graz":
     # GRAZ LANDING DATASET DEFAULT FILE STRUCTURE
     # └── semantic_drone_dataset
@@ -187,8 +144,8 @@ def get_label_img(base_dir_dataset,dataset_name, use_default_split=True):
         
         gt_dir=os.path.join(base_dir_dataset,"training_set","gt","semantic")
         img_dir=os.path.join(base_dir_dataset,"training_set","images")
-        gts=list_files_in_dir(gt_dir,ext=".png")
-        imgs=list_files_in_dir(img_dir,ext=".jpg") 
+        gts=utils.list_files_in_dir(gt_dir,ext=".png")
+        imgs=utils.list_files_in_dir(img_dir,ext=".jpg") 
     
     elif dataset_name=="aeroscapes":
     # AEROSCAPE DATASET DEFAULT FILE STRUCTURE
@@ -201,8 +158,8 @@ def get_label_img(base_dir_dataset,dataset_name, use_default_split=True):
     # Using default data split defined by dataset
         gt_dir=os.path.join(base_dir_dataset,"Visualizations")
         img_dir=os.path.join(base_dir_dataset,'JPEGImages')
-        gts_dir=list_files_in_dir(gt_dir,ext=".png")
-        imgs_dir=list_files_in_dir(img_dir,ext=".jpg")
+        gts_dir=utils.list_files_in_dir(gt_dir,ext=".png")
+        imgs_dir=utils.list_files_in_dir(img_dir,ext=".jpg")
         
         if use_default_split:
             splits=[]
@@ -254,8 +211,8 @@ def get_label_img(base_dir_dataset,dataset_name, use_default_split=True):
         dir_val=os.path.join(base_dir_dataset,"uavid_val")
         dir_train=os.path.join(base_dir_dataset,"uavid_train")
         
-        files_val=list_files_in_dir(dir_val,ext=".png")
-        files_train=list_files_in_dir(dir_train,ext=".png")
+        files_val=utils.list_files_in_dir(dir_val,ext=".png")
+        files_train=utils.list_files_in_dir(dir_train,ext=".png")
         files_all=files_train+files_val
         imgs_dir=[]
         gts_dir=[]
@@ -324,9 +281,16 @@ def get_data_split(imgs,gts,divide=[0.7,0.15,0.15], random=False):
     gts_split=[gts[:num_train],gts[num_train:num_train+num_val],gts[num_train+num_val:]]
     return imgs_split,gts_split
 
-
+def is_split(list_files):
+    """ Check if list images/ground truth are already split into train/val/test sets
+        Returns True if the dataset is split in sets, False otherwise.
+    """
+    return any(isinstance(i, list) for i in list_files)
 
 def convert_gts2cityscapes(base_dir_dataset, dataset_name, lbl_split, mode="train_id",size=(2048,1024)):
+    """ Converts gts from a set dataset to a set size, based either on the trainIds or labelIds set in labels.py.
+        Saves them in a newly created folder.
+    """
     split_names=['train','val','test']
     print("Converting Ground Truth images...")
     for idx,split in enumerate(lbl_split):
@@ -346,36 +310,10 @@ def convert_gts2cityscapes(base_dir_dataset, dataset_name, lbl_split, mode="trai
                 im.save(os.path.join(split_dir,p.parents[1].name+'_'+os.path.basename(file)))
             else:
                 im.save(os.path.join(split_dir,os.path.basename(file)))
-
-def is_split(list_files):
-    """ Check if list images/ground truth are already split into train/val/test sets
-        Returns True if the dataset is split in sets, False otherwise.
-    """
-    return any(isinstance(i, list) for i in list_files)
     
-def prepare_dataset(base_dir_dataset,dataset_name,mode="train_id", size=(2048,1024)):
-    imgs,lbs=get_label_img(base_dir_dataset,dataset_name)
-    create_default_file_struct(base_dir_dataset, dataset_name)
-    if not is_split(imgs):
-        img_split,lbl_split=get_data_split(imgs,lbs)
-    else:
-        img_split=imgs
-        lbl_split=lbs
-    convert_gts2cityscapes(base_dir_dataset, dataset_name,lbl_split, mode, size)
-    convert_imgs2cityscape(base_dir_dataset,dataset_name,img_split)
-    save_sets_to_txt(base_dir_dataset,dataset_name)
-
-
-
-def list_files_in_dir(directory,ext=""):
-    """recursively list all files in a directory with a particular exention
-    e.g. directory= /home/user/datasets, ext=".jpeg"
-    """
-    files = glob.glob(directory + '/**/*'+ext, recursive=True)
-    files.sort()
-    return files
-
 def convert_imgs2cityscape(base_dir_dataset,dataset_name, img_split,size=(2048,1024)):
+    """ Converts imgs from a set dataset to a set size. Saves them in a newly created folder.
+    """
     split_names=['train','val','test']
     print("Resizing and copying source images...")
     for idx,split in enumerate(img_split):
@@ -408,7 +346,7 @@ def save_sets_to_txt(base_dir_dataset, dataset_name):
         paths=[]
         for folder in ['gt','images']:
             dir= os.path.join(dir_dataset,folder,subfolder)
-            list_files=list_files_in_dir(dir)
+            list_files=utils.list_files_in_dir(dir)
             list_files.sort()
             paths.append(list_files)
         paths=list(map(list, zip(*paths)))
@@ -419,15 +357,21 @@ def save_sets_to_txt(base_dir_dataset, dataset_name):
             for img in path_all_files[idx]:
                 f.write("{}, {}\n".format(img[0],img[1]))
 
+def prepare_dataset(base_dir_dataset,dataset_name,mode="train_id", size=(2048,1024),use_default_split=True):
+    imgs,lbs=get_label_img(base_dir_dataset,dataset_name,use_default_split=use_default_split)
+    utils.create_default_file_struct(base_dir_dataset, dataset_name)
+    if not is_split(imgs):
+        img_split,lbl_split=get_data_split(imgs,lbs)
+    else:
+        img_split=imgs
+        lbl_split=lbs
+    convert_gts2cityscapes(base_dir_dataset, dataset_name,lbl_split, mode, size=size)
+    convert_imgs2cityscape(base_dir_dataset,dataset_name,img_split,size=size)
+    save_sets_to_txt(base_dir_dataset,dataset_name)
+
 
 
 path_graz="/home/kubitz/Documents/fyp/dataset/graz_landing/semantic_drone_dataset"
 path_aeroscapes="/home/kubitz/Documents/fyp/dataset/aeroscapes"
 path_uavid="/home/kubitz/Documents/fyp/dataset/uavid_v1.5_official_release_image"
-# x=get_label_img(path_uavid,'uavid')
-# im = Image.open(r"/home/kubitz/Documents/fyp/UAV-Segmentation-Scripts/uavsegscripts/test.png") 
-# r = rgb_labels2cityscape(im,'graz',mode="label_id")
-#r.save('/home/kubitz/Documents/fyp/UAV-Segmentation-Scripts/uavsegscripts/resultTrain.png')
 prepare_dataset(path_aeroscapes,"aeroscapes")
-#create_default_file_struct("/home/kubitz/Documents/fyp/dataset/","graz")
-#ls= list_files_in_dir("/home/kubitz/Documents/fyp/dataset/graz_landing/semantic_drone_dataset/training_set/gt")
