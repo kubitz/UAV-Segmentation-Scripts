@@ -217,9 +217,9 @@ def get_label_img(base_dir_dataset,dataset_name, use_default_split=True):
                 base_name=Path(gt).stem
                 if base_name in splits[0]:
                     imgs[0].append(imgs_dir[idx])
-                    imgs[1].append(imgs_dir[idx])
-                else:
                     gts[0].append(gt)
+                else:
+                    imgs[1].append(imgs_dir[idx])
                     gts[1].append(gt)
         else:
             gts=gts_dir
@@ -428,6 +428,6 @@ path_uavid="/home/kubitz/Documents/fyp/dataset/uavid_v1.5_official_release_image
 # im = Image.open(r"/home/kubitz/Documents/fyp/UAV-Segmentation-Scripts/uavsegscripts/test.png") 
 # r = rgb_labels2cityscape(im,'graz',mode="label_id")
 #r.save('/home/kubitz/Documents/fyp/UAV-Segmentation-Scripts/uavsegscripts/resultTrain.png')
-prepare_dataset(path_uavid,"uavid")
+prepare_dataset(path_aeroscapes,"aeroscapes")
 #create_default_file_struct("/home/kubitz/Documents/fyp/dataset/","graz")
 #ls= list_files_in_dir("/home/kubitz/Documents/fyp/dataset/graz_landing/semantic_drone_dataset/training_set/gt")
