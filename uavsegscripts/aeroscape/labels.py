@@ -60,17 +60,17 @@ Label = namedtuple( 'Label' , [
 aeroscapes = [
     #       name                     id    trainId   category            catId                    hasInstances      ignoreInEval   color
     Label(  'background'            ,  0 ,      255 , 'void'            , Category.void.value       , False        , True         , (  0,  0,  0) ),
-    Label(  'person'                ,  1 ,        1, 'human'           , Category.human.value      , False        , True         , (  1,  1,  1) ),
-    Label(  'bike'                  ,  2 ,      255 , 'human'           , Category.human.value      , False        , True         , (  2,  2,  2) ),
-    Label(  'car'                   ,  3 ,        2 , 'vehicle'         , Category.vehicle.value    , False        , True         , (  3,  3,  3) ),
-    Label(  'drone'                 ,  4 ,      255 , 'obstacle'        , Category.obstacle.value   , False        , True         , (  4,  4,  4) ),
-    Label(  'boat'                  ,  5 ,      255 , 'vehicle'         , Category.obstacle.value   , False        , True         , (  5,  5,  5) ),
-    Label(  'animal'                ,  6 ,      255 , 'object'          , Category.obstacle.value   , False        , True         , (  6,  6,  6) ),
-    Label(  'obstacle'              ,  7 ,      255 , 'obstacle'        , Category.obstacle.value   , False        , False        , (  7,  7,  7) ),
-    Label(  'construction'          ,  8 ,        3 , 'construction'    , Category.void.value       , False        , False        , (  8,  8,  8) ),
-    Label(  'vegetation'            ,  9 ,        4 , 'vegetation'      , Category.vegetation.value , False        , True         , (  9,  9,  9) ),
-    Label(  'road'                  , 10 ,        5 , 'flat'            , Category.flat.value       , False        , True         , ( 10, 10, 10) ),
-    Label(  'sky'                   , 11 ,      255 , 'void'            , Category.void.value       , False        , False        , ( 11, 11, 11) ),
+    Label(  'person'                ,  1 ,        1, 'human'           , Category.human.value      , False        , True         ,  (192,128,128) ),
+    Label(  'bike'                  ,  2 ,      255 , 'human'           , Category.human.value      , False        , True         , (  0, 128, 0) ),
+    Label(  'car'                   ,  3 ,        2 , 'vehicle'         , Category.vehicle.value    , False        , True         , (128,128,128) ),
+    Label(  'drone'                 ,  4 ,      255 , 'obstacle'        , Category.obstacle.value   , False        , True         , (128,  0,  0) ),
+    Label(  'boat'                  ,  5 ,      255 , 'vehicle'         , Category.obstacle.value   , False        , True         , (  0,  0,128) ),
+    Label(  'animal'                ,  6 ,      255 , 'object'          , Category.obstacle.value   , False        , True         , (192,  0,128) ),
+    Label(  'obstacle'              ,  7 ,      255 , 'obstacle'        , Category.obstacle.value   , False        , False        , (192,  0,  0) ),
+    Label(  'construction'          ,  8 ,        3 , 'construction'    , Category.void.value       , False        , False        , (192,128,  0) ),
+    Label(  'vegetation'            ,  9 ,        4 , 'vegetation'      , Category.vegetation.value , False        , True         , (  0, 64,  0) ),
+    Label(  'road'                  , 10 ,        5 , 'flat'            , Category.flat.value       , False        , True         , (128,128,  0) ),
+    Label(  'sky'                   , 11 ,      255 , 'void'            , Category.void.value       , False        , False        , (  0,128,128) ),
 ]
 
 # TU Graz
