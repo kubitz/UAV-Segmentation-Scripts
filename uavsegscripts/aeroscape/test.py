@@ -1,3 +1,4 @@
+from typing import Tuple
 from cv2 import data
 import numpy as np
 from PIL import Image
@@ -7,7 +8,7 @@ from labels import datasets
 from pathlib import Path
 from tqdm import tqdm
 import random
-
+from pathlib import Path
 def get_palette(dataset_name):
     """Takes a dataset label format. Returns a palette based on the color specified
 
@@ -162,7 +163,7 @@ def create_default_file_struct(base_dir,dataset_name):
     Path(os.path.join(base_dir_dataset,'image_sets')).mkdir(parents=True, exist_ok=True)
 
 
-def get_label_img(base_dir_dataset,dataset_name):
+def get_label_img(base_dir_dataset,dataset_name, use_default_split=True):
 
     if dataset_name=="graz":
     # GRAZ LANDING DATASET DEFAULT FILE STRUCTURE
@@ -186,6 +187,8 @@ def get_label_img(base_dir_dataset,dataset_name):
         
         gt_dir=os.path.join(base_dir_dataset,"training_set","gt","semantic")
         img_dir=os.path.join(base_dir_dataset,"training_set","images")
+        gts=list_files_in_dir(gt_dir,ext=".png")
+        imgs=list_files_in_dir(img_dir,ext=".jpg") 
     
     elif dataset_name=="aeroscapes":
     # AEROSCAPE DATASET DEFAULT FILE STRUCTURE
@@ -195,8 +198,32 @@ def get_label_img(base_dir_dataset,dataset_name):
     # ├── JPEGImages
     # ├── SegmentationClass
     # └── Visualizations
+    # Using default data split defined by dataset
         gt_dir=os.path.join(base_dir_dataset,"Visualizations")
         img_dir=os.path.join(base_dir_dataset,'JPEGImages')
+        gts_dir=list_files_in_dir(gt_dir,ext=".png")
+        imgs_dir=list_files_in_dir(img_dir,ext=".jpg")
+        
+        if use_default_split:
+            splits=[]
+            for split in ['trn.txt','val.txt']:
+                split_dir=os.path.join(base_dir_dataset,"ImageSets",split)
+                with open(split_dir) as f:
+                    split=f.read().splitlines()
+                    splits.append(split)            
+            imgs=[[],[],[]]  
+            gts= [[],[],[]] 
+            for idx,gt in enumerate(gts_dir):
+                base_name=Path(gt).stem
+                if base_name in splits[0]:
+                    imgs[0].append(imgs_dir[idx])
+                    imgs[1].append(imgs_dir[idx])
+                else:
+                    gts[0].append(gt)
+                    gts[1].append(gt)
+            else:
+                gts=gts_dir
+                imgs=imgs_dir
     
     elif dataset_name=="uavid":
     # UAVID DATASET DEFAULT FILE STRUCTURE
@@ -226,8 +253,7 @@ def get_label_img(base_dir_dataset,dataset_name):
         pass
     else:
         raise ValueError("invalid dataset name")
-    gts=list_files_in_dir(gt_dir,ext=".png")
-    imgs=list_files_in_dir(img_dir,ext=".jpg")
+
     if len(gts)!=len(imgs):
         raise ValueError("Missing gt/img data")
     return imgs,gts
@@ -304,6 +330,7 @@ def list_files_in_dir(directory,ext=""):
     e.g. directory= /home/user/datasets, ext=".jpeg"
     """
     files = glob.glob(directory + '/**/*'+ext, recursive=True)
+    files.sort()
     return files
 
 def convert_imgs2cityscape(base_dir_dataset,dataset_name, img_split,size=(2048,1024)):
@@ -348,17 +375,14 @@ def save_sets_to_txt(base_dir_dataset, dataset_name):
 
 
 path_dataset="/home/kubitz/Documents/fyp/dataset/graz_landing/semantic_drone_dataset"
+path_aeroscapes="/home/kubitz/Documents/fyp/dataset/aeroscapes"
 
-
+x=get_label_img(path_aeroscapes,'aeroscapes')
 # Open input image and palettise to "inPalette" so each pixel is replaced by palette index
 # ... so all black pixels become 0, all red pixels become 1, all green pixels become 2...
 im = Image.open(r"/home/kubitz/Documents/fyp/UAV-Segmentation-Scripts/uavsegscripts/test.png") 
 r = rgb_labels2cityscape(im,'graz',mode="label_id")
 r.save('/home/kubitz/Documents/fyp/UAV-Segmentation-Scripts/uavsegscripts/resultTrain.png')
-
-
-
 prepare_dataset("/home/kubitz/Documents/fyp/dataset/graz_landing/semantic_drone_dataset","graz")
-
 create_default_file_struct("/home/kubitz/Documents/fyp/dataset/","graz")
 ls= list_files_in_dir("/home/kubitz/Documents/fyp/dataset/graz_landing/semantic_drone_dataset/training_set/gt")
