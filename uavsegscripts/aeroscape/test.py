@@ -221,9 +221,9 @@ def get_label_img(base_dir_dataset,dataset_name, use_default_split=True):
                 else:
                     gts[0].append(gt)
                     gts[1].append(gt)
-            else:
-                gts=gts_dir
-                imgs=imgs_dir
+        else:
+            gts=gts_dir
+            imgs=imgs_dir
     
     elif dataset_name=="uavid":
     # UAVID DATASET DEFAULT FILE STRUCTURE
@@ -247,10 +247,48 @@ def get_label_img(base_dir_dataset,dataset_name, use_default_split=True):
     #         └── seq37
     #             ├── Images
     #             └── Labels
-        pass
+    # Test images do not have labels, hence they are discarded.
+    # Sorry about this terrible implementation :( Gotta get stuff done. 
+
+        dir_val=os.path.join(base_dir_dataset,"uavid_val")
+        dir_train=os.path.join(base_dir_dataset,"uavid_train")
+        
+        files_val=list_files_in_dir(dir_val,ext=".png")
+        files_train=list_files_in_dir(dir_train,ext=".png")
+        files_all=files_train+files_val
+        imgs_dir=[]
+        gts_dir=[]
+        
+        for file in files_all:
+            p=Path(file)
+            if p.parents[0].name=='Images':
+                imgs_dir.append(file)
+            elif p.parents[0].name=='Labels':
+                gts_dir.append(file)
+            else:
+                raise NameError("Dataset does not follow required structure")
+        
+        if use_default_split:
+            imgs=[[],[],[]]  
+            gts= [[],[],[]]         
+            for idx,img in enumerate(imgs_dir):
+                p=Path(img)
+                if p.parents[2].name=='uavid_train':
+                    imgs[0].append(img)
+                    gts[0].append(gts_dir[idx])
+
+                elif p.parents[2].name=='uavid_val':
+                    imgs[1].append(img)
+                    gts[1].append(gts_dir[idx])
+                else:
+                    raise NameError("Dataset does not follow required structure")
+        else:
+            imgs=imgs_dir
+            gts=gts_dir
 
     elif dataset_name=="cityscape":
-        pass
+        #Dataset support not implemented yet. 
+        gts,imgs=[]
     else:
         raise ValueError("invalid dataset name")
 
@@ -376,8 +414,8 @@ def save_sets_to_txt(base_dir_dataset, dataset_name):
 
 path_dataset="/home/kubitz/Documents/fyp/dataset/graz_landing/semantic_drone_dataset"
 path_aeroscapes="/home/kubitz/Documents/fyp/dataset/aeroscapes"
-
-x=get_label_img(path_aeroscapes,'aeroscapes')
+path_uavid="/home/kubitz/Documents/fyp/dataset/uavid_v1.5_official_release_image"
+x=get_label_img(path_uavid,'uavid')
 # Open input image and palettise to "inPalette" so each pixel is replaced by palette index
 # ... so all black pixels become 0, all red pixels become 1, all green pixels become 2...
 im = Image.open(r"/home/kubitz/Documents/fyp/UAV-Segmentation-Scripts/uavsegscripts/test.png") 
