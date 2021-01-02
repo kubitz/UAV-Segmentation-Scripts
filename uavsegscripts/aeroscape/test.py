@@ -248,6 +248,7 @@ def get_label_img(base_dir_dataset,dataset_name, use_default_split=True):
     #             ├── Images
     #             └── Labels
     # Test images do not have labels, hence they are discarded.
+    # file names are not unique accross sequences hence they are modified before saving.
     # Sorry about this terrible implementation :( Gotta get stuff done. 
 
         dir_val=os.path.join(base_dir_dataset,"uavid_val")
@@ -297,8 +298,6 @@ def get_label_img(base_dir_dataset,dataset_name, use_default_split=True):
     return imgs,gts
 
 
-
-
 def get_data_split(imgs,gts,divide=[0.7,0.15,0.15], random=False):
     """ Split list in three/two sets depending on the size of the input list
         if the len(divide)==2, splits in train/test, otherwise train/test/val
@@ -341,7 +340,12 @@ def convert_gts2cityscapes(base_dir_dataset, dataset_name, lbl_split, mode="trai
             im = Image.open(file)
             im=im.resize(size, Image.NEAREST)
             im=rgb_labels2cityscape(im,dataset_name,mode=mode)
-            im.save(os.path.join(split_dir,os.path.basename(file)))
+            if dataset_name=='uavid':
+                # Due to non-unique filenames in uavid, files need to be renamed
+                p=Path(file)
+                im.save(os.path.join(split_dir,p.parents[1].name+'_'+os.path.basename(file)))
+            else:
+                im.save(os.path.join(split_dir,os.path.basename(file)))
 
 def is_split(list_files):
     """ Check if list images/ground truth are already split into train/val/test sets
@@ -383,7 +387,12 @@ def convert_imgs2cityscape(base_dir_dataset,dataset_name, img_split,size=(2048,1
         for file in tqdm(split,desc=split_names[idx]):
             im = Image.open(file)
             im=im.resize(size)
-            im.save(os.path.join(split_dir,os.path.basename(file)))
+            if dataset_name=='uavid':
+                # Due to non-unique filenames in uavid, files need to be renamed
+                p=Path(file)
+                im.save(os.path.join(split_dir,p.parents[1].name+'_'+os.path.basename(file)))
+            else:
+                im.save(os.path.join(split_dir,os.path.basename(file)))
         
 def save_sets_to_txt(base_dir_dataset, dataset_name):
     """Save sets split in txt file with the ground truth
@@ -412,15 +421,13 @@ def save_sets_to_txt(base_dir_dataset, dataset_name):
 
 
 
-path_dataset="/home/kubitz/Documents/fyp/dataset/graz_landing/semantic_drone_dataset"
+path_graz="/home/kubitz/Documents/fyp/dataset/graz_landing/semantic_drone_dataset"
 path_aeroscapes="/home/kubitz/Documents/fyp/dataset/aeroscapes"
 path_uavid="/home/kubitz/Documents/fyp/dataset/uavid_v1.5_official_release_image"
-x=get_label_img(path_uavid,'uavid')
-# Open input image and palettise to "inPalette" so each pixel is replaced by palette index
-# ... so all black pixels become 0, all red pixels become 1, all green pixels become 2...
-im = Image.open(r"/home/kubitz/Documents/fyp/UAV-Segmentation-Scripts/uavsegscripts/test.png") 
-r = rgb_labels2cityscape(im,'graz',mode="label_id")
-r.save('/home/kubitz/Documents/fyp/UAV-Segmentation-Scripts/uavsegscripts/resultTrain.png')
-prepare_dataset("/home/kubitz/Documents/fyp/dataset/graz_landing/semantic_drone_dataset","graz")
-create_default_file_struct("/home/kubitz/Documents/fyp/dataset/","graz")
-ls= list_files_in_dir("/home/kubitz/Documents/fyp/dataset/graz_landing/semantic_drone_dataset/training_set/gt")
+# x=get_label_img(path_uavid,'uavid')
+# im = Image.open(r"/home/kubitz/Documents/fyp/UAV-Segmentation-Scripts/uavsegscripts/test.png") 
+# r = rgb_labels2cityscape(im,'graz',mode="label_id")
+#r.save('/home/kubitz/Documents/fyp/UAV-Segmentation-Scripts/uavsegscripts/resultTrain.png')
+prepare_dataset(path_uavid,"uavid")
+#create_default_file_struct("/home/kubitz/Documents/fyp/dataset/","graz")
+#ls= list_files_in_dir("/home/kubitz/Documents/fyp/dataset/graz_landing/semantic_drone_dataset/training_set/gt")
