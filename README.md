@@ -15,7 +15,7 @@ It converts all of the supported datasets to a cityscape type structure. This is
 3. (optional) Create virtual environment
 4. `pip3 install -r requirements.txt`
 4. `python3 setup.py install`
-5. Run `python3 scripts/run.py --dataset [insert dataset_name]` (you can specify which dataset to standarize in that file first)
+5. Run `python3 scripts/run.py --dataset [insert dataset_name]`
 6. Feel free raise an Issue, star, or do PRs :)
    
 
