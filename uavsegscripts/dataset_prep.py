@@ -358,6 +358,7 @@ def save_sets_to_txt(base_dir_dataset, dataset_name):
                 f.write("{}, {}\n".format(img[0],img[1]))
 
 def prepare_dataset(base_dir_dataset,dataset_name,mode="train_id", size=(2048,1024),use_default_split=True):
+    print("Preparing {} dataset...".format(dataset_name))
     imgs,lbs=get_label_img(base_dir_dataset,dataset_name,use_default_split=use_default_split)
     utils.create_default_file_struct(base_dir_dataset, dataset_name)
     if not is_split(imgs):
@@ -370,8 +371,8 @@ def prepare_dataset(base_dir_dataset,dataset_name,mode="train_id", size=(2048,10
     save_sets_to_txt(base_dir_dataset,dataset_name)
 
 
-
-path_graz="/home/kubitz/Documents/fyp/dataset/graz_landing/semantic_drone_dataset"
-path_aeroscapes="/home/kubitz/Documents/fyp/dataset/aeroscapes"
-path_uavid="/home/kubitz/Documents/fyp/dataset/uavid_v1.5_official_release_image"
-prepare_dataset(path_aeroscapes,"aeroscapes")
+if __name__ == "__main__":
+    path_graz="/home/kubitz/Documents/fyp/dataset/graz_landing/semantic_drone_dataset"
+    path_aeroscapes="/home/kubitz/Documents/fyp/dataset/aeroscapes"
+    path_uavid="/home/kubitz/Documents/fyp/dataset/uavid_v1.5_official_release_image"
+    prepare_dataset(path_aeroscapes,"aeroscapes")
